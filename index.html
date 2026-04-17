@@ -1,0 +1,288 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Exo+2:wght@400;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#000}
+  .carousel{width:100%;max-width:540px;margin:0 auto;font-family:'Exo 2',sans-serif}
+  .slide{
+    position:relative;width:100%;aspect-ratio:9/16;max-height:85vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    overflow:hidden;border-radius:16px;margin-bottom:12px;
+    background:#000;
+  }
+  .slide-num{position:absolute;top:16px;right:16px;font-family:'Exo 2',sans-serif;font-size:11px;letter-spacing:3px;color:rgba(255,255,255,0.35)}
+  .swipe-hint{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:3px;color:rgba(255,17,17,0.7);text-transform:uppercase}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;width:100%;height:100%}
+  .half{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 12px;position:relative}
+  .half.dark{background:#050505}
+  .half.lit{background:#0a0000}
+  .half-label{font-size:9px;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;opacity:0.5}
+  .half-label.bad{color:#888}
+  .half-label.good{color:#ff1111}
+  .divider-line{position:absolute;top:0;bottom:0;left:50%;width:1px;background:linear-gradient(to bottom,transparent,#ff1111,transparent);z-index:10}
+  .icon-big{font-size:52px;margin-bottom:10px;line-height:1}
+  .stat-num{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;line-height:1;margin-bottom:4px}
+  .stat-num.bad{color:#333}
+  .stat-num.good{color:#ff1111;text-shadow:0 0 20px rgba(255,17,17,0.6)}
+  .stat-lbl{font-size:11px;letter-spacing:1px;text-align:center;line-height:1.4}
+  .stat-lbl.bad{color:#444}
+  .stat-lbl.good{color:#ccc}
+  .big-text{font-family:'Orbitron',sans-serif;font-weight:900;text-align:center;line-height:1.1;letter-spacing:-1px}
+  .tag{display:inline-block;padding:5px 14px;border-radius:2px;font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+  .tag.red{background:rgba(255,17,17,0.15);border:1px solid #ff1111;color:#ff1111}
+  .tag.gray{background:rgba(255,255,255,0.05);border:1px solid #333;color:#555}
+  .progress-bar{width:80%;height:4px;background:#111;border-radius:2px;margin-top:6px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:2px}
+  .progress-fill.bad{background:#222;width:30%}
+  .progress-fill.good{background:#ff1111;width:85%;box-shadow:0 0 8px rgba(255,17,17,0.8)}
+  .body-icon{font-size:40px;margin:8px 0}
+  .vs-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:20;background:#ff1111;color:#000;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:900;letter-spacing:2px;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  .glow-dot{width:6px;height:6px;border-radius:50%;background:#ff1111;box-shadow:0 0 10px #ff1111;margin:0 auto 8px}
+  .white-dot{width:6px;height:6px;border-radius:50%;background:#222;margin:0 auto 8px}
+  .cta-slide{background:#050505;border:1px solid rgba(255,17,17,0.3)}
+  .cta-main{font-family:'Orbitron',sans-serif;font-size:clamp(22px,5vw,32px);font-weight:900;color:#ff1111;text-align:center;line-height:1.1;text-shadow:0 0 30px rgba(255,17,17,0.5);margin-bottom:16px}
+  .cta-sub{font-size:13px;color:#888;text-align:center;letter-spacing:2px;line-height:1.6;max-width:80%;margin:0 auto 24px}
+  .cta-comment{background:rgba(255,17,17,0.12);border:1px solid #ff1111;border-radius:4px;padding:14px 28px;display:inline-block;margin-bottom:12px}
+  .cta-comment-word{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;color:#ff1111;letter-spacing:6px;text-shadow:0 0 20px rgba(255,17,17,0.8)}
+  .cta-comment-sub{font-size:10px;letter-spacing:3px;color:#666;margin-top:4px;text-align:center}
+  .slide-header{position:absolute;top:0;left:0;right:0;padding:16px 20px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,17,17,0.1)}
+  .brand{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:900;color:#ff1111;letter-spacing:4px}
+  .dot-row{display:flex;gap:6px;align-items:center;margin-left:auto}
+  .dot{width:5px;height:5px;border-radius:50%;background:#333}
+  .dot.active{background:#ff1111;box-shadow:0 0 6px #ff1111}
+  .red-line{width:40px;height:2px;background:#ff1111;margin:12px auto}
+  .scene-label{font-size:9px;letter-spacing:4px;color:rgba(255,17,17,0.6);text-transform:uppercase;margin-bottom:6px;text-align:center}
+  .check{color:#ff1111;margin-right:4px}
+  .cross{color:#333;margin-right:4px}
+  .list-item{font-size:11px;letter-spacing:1px;text-align:left;padding:4px 0;display:flex;align-items:center}
+  .list-item.good{color:#ccc}
+  .list-item.bad{color:#333}
+  .percentage{font-family:'Orbitron',sans-serif;font-size:44px;font-weight:900;line-height:1}
+  .percentage.red{color:#ff1111;text-shadow:0 0 25px rgba(255,17,17,0.6)}
+  .percentage.dark{color:#1a1a1a}
+</style>
+
+<div class="carousel">
+
+  <!-- SLIDE 1: HOOK -->
+  <div class="slide" style="background:#000;justify-content:flex-start;padding-top:60px">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="slide-num">1 / 8</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px">
+      <div class="tag red">Temporada 25/26</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:clamp(11px,2.5vw,14px);color:#555;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;text-align:center">Lo que nadie te cuenta sobre</div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(28px,7vw,46px);color:#fff;text-align:center;line-height:1.05;letter-spacing:2px">EL FUTBOLISTA<br>QUE <span style="color:#ff1111;text-shadow:0 0 20px rgba(255,17,17,0.5)">DOMINA</span><br>EL CAMPO</div>
+      <div class="red-line"></div>
+      <div style="font-size:12px;color:#555;letter-spacing:2px;text-align:center;max-width:80%">vs el que solo aparece el dia del partido</div>
+    </div>
+    <div class="swipe-hint">desliza &#8594;</div>
+  </div>
+
+  <!-- SLIDE 2: SIN APP VS CON APP -->
+  <div class="slide">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="slide-num">2 / 8</div>
+    <div class="grid2" style="margin-top:52px">
+      <div class="half dark">
+        <div class="half-label bad">Sin programa</div>
+        <div class="white-dot"></div>
+        <div class="stat-num bad">4.6s</div>
+        <div class="stat-lbl bad">Sprint<br>30 metros</div>
+        <div class="progress-bar"><div class="progress-fill bad"></div></div>
+        <div style="margin-top:16px"></div>
+        <div class="stat-num bad" style="font-size:20px">38cm</div>
+        <div class="stat-lbl bad">Salto<br>vertical</div>
+        <div class="progress-bar"><div class="progress-fill bad"></div></div>
+        <div style="margin-top:16px"></div>
+        <div class="stat-num bad" style="font-size:20px">1.200m</div>
+        <div class="stat-lbl bad">Yo-Yo<br>resistencia</div>
+        <div class="progress-bar"><div class="progress-fill bad"></div></div>
+      </div>
+      <div class="divider-line"></div>
+      <div class="vs-badge">VS</div>
+      <div class="half lit">
+        <div class="half-label good">Con ELITE FC</div>
+        <div class="glow-dot"></div>
+        <div class="stat-num good">3.9s</div>
+        <div class="stat-lbl good">Sprint<br>30 metros</div>
+        <div class="progress-bar"><div class="progress-fill good"></div></div>
+        <div style="margin-top:16px"></div>
+        <div class="stat-num good" style="font-size:20px">47cm</div>
+        <div class="stat-lbl good">Salto<br>vertical</div>
+        <div class="progress-bar"><div class="progress-fill good"></div></div>
+        <div style="margin-top:16px"></div>
+        <div class="stat-num good" style="font-size:20px">1.800m</div>
+        <div class="stat-lbl good">Yo-Yo<br>resistencia</div>
+        <div class="progress-bar"><div class="progress-fill good"></div></div>
+      </div>
+    </div>
+    <div class="swipe-hint">desliza &#8594;</div>
+  </div>
+
+  <!-- SLIDE 3: EL PROBLEMA -->
+  <div class="slide" style="padding:60px 28px 40px">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="slide-num">3 / 8</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="tag gray" style="margin-bottom:20px">El problema</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:clamp(14px,3.5vw,18px);font-weight:900;color:#fff;text-align:center;line-height:1.3;margin-bottom:20px">El 90% de futbolistas<br>entrena <span style="color:#ff1111">sin datos,<br>sin plan, sin control</span></div>
+      <div class="red-line"></div>
+      <div style="width:100%;max-width:300px">
+        <div class="list-item bad"><span class="cross">&#10007;</span>Sin saber si mejoran</div>
+        <div class="list-item bad"><span class="cross">&#10007;</span>Sin control de cargas</div>
+        <div class="list-item bad"><span class="cross">&#10007;</span>Sin nutricion adaptada</div>
+        <div class="list-item bad"><span class="cross">&#10007;</span>Sin tests que midan el progreso</div>
+        <div class="list-item bad"><span class="cross">&#10007;</span>Sin plan hasta el partido</div>
+      </div>
+      <div style="margin-top:20px;font-size:11px;color:#555;text-align:center;letter-spacing:2px">Y se preguntan por que no mejoran temporada tras temporada</div>
+    </div>
+    <div class="swipe-hint">desliza &#8594;</div>
+  </div>
+
+  <!-- SLIDE 4: LA SOLUCION -->
+  <div class="slide" style="padding:60px 28px 40px">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="slide-num">4 / 8</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="tag red" style="margin-bottom:20px">La solucion</div>
+      <div style="font-family:'Orbitron',sans-serif;font-size:clamp(14px,3.5vw,18px);font-weight:900;color:#fff;text-align:center;line-height:1.3;margin-bottom:20px">Un programa de<br><span style="color:#ff1111">alto rendimiento</span><br>en tu movil</div>
+      <div class="red-line"></div>
+      <div style="width:100%;max-width:300px">
+        <div class="list-item good"><span class="check">&#10003;</span>Plan de gym personalizado</div>
+        <div class="list-item good"><span class="check">&#10003;</span>Nutricion dia a dia</div>
+        <div class="list-item good"><span class="check">&#10003;</span>Tests fisicos con evolucion</div>
+        <div class="list-item good"><span class="check">&#10003;</span>Gestion de carga pre-partido</div>
+        <div class="list-item good"><span class="check">&#10003;</span>Videos tacticos por posicion</div>
+      </div>
+    </div>
+    <div class="swipe-hint">desliza &#8594;</div>
+  </div>
+
+  <!-- SLIDE 5: DATO IMPACTO -->
+  <div class="slide" style="padding:60px 28px 40px">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="slide-num">5 / 8</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="scene-label">En 30 dias de programa</div>
+      <div class="grid2" style="width:100%;gap:1px;margin-top:10px">
+        <div style="display:flex;flex-direction:column;align-items:center;padding:16px 8px;background:#0a0000;border:1px solid rgba(255,17,17,0.2);border-radius:4px;margin:4px">
+          <div class="percentage red">+18%</div>
+          <div style="font-size:10px;color:#888;letter-spacing:2px;margin-top:4px;text-align:center;text-transform:uppercase">Velocidad</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;padding:16px 8px;background:#0a0000;border:1px solid rgba(255,17,17,0.2);border-radius:4px;margin:4px">
+          <div class="percentage red">+24%</div>
+          <div style="font-size:10px;color:#888;letter-spacing:2px;margin-top:4px;text-align:center;text-transform:uppercase">Potencia</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;padding:16px 8px;background:#0a0000;border:1px solid rgba(255,17,17,0.2);border-radius:4px;margin:4px">
+          <div class="percentage red">+31%</div>
+          <div style="font-size:10px;color:#888;letter-spacing:2px;margin-top:4px;text-align:center;text-transform:uppercase">Resistencia</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;padding:16px 8px;background:#0a0000;border:1px solid rgba(255,17,17,0.2);border-radius:4px;margin:4px">
+          <div class="percentage red">x3</div>
+          <div style="font-size:10px;color:#888;letter-spacing:2px;margin-top:4px;text-align:center;text-transform:uppercase">Presencia campo</div>
+        </div>
+      </div>
+      <div class="red-line"></div>
+      <div style="font-size:11px;color:#555;text-align:center;letter-spacing:1px;max-width:75%">Esto no es suerte. Es ciencia aplicada al futbol.</div>
+    </div>
+    <div class="swipe-hint">desliza &#8594;</div>
+  </div>
+
+  <!-- SLIDE 6: EL JUGADOR QUE ERES -->
+  <div class="slide" style="padding:60px 28px 40px">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="slide-num">6 / 8</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div style="font-family:'Orbitron',sans-serif;font-size:10px;color:#555;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;text-align:center">El jugador que usa ELITE FC</div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,6vw,38px);color:#fff;text-align:center;line-height:1.1;letter-spacing:1px">LLEGA FRESCO<br>AL <span style="color:#ff1111">MINUTO 90</span></div>
+      <div class="red-line"></div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,6vw,38px);color:#fff;text-align:center;line-height:1.1;letter-spacing:1px">EXPLOTA MAS<br>RAPIDO QUE<br><span style="color:#ff1111">NADIE</span></div>
+      <div class="red-line"></div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(24px,6vw,38px);color:#fff;text-align:center;line-height:1.1;letter-spacing:1px">DOMINA<br>CADA <span style="color:#ff1111">DUELO</span></div>
+    </div>
+    <div class="swipe-hint">desliza &#8594;</div>
+  </div>
+
+  <!-- SLIDE 7: EXCLUSIVIDAD -->
+  <div class="slide" style="padding:60px 28px 40px">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+      </div>
+    </div>
+    <div class="slide-num">7 / 8</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div class="tag red" style="margin-bottom:16px">Acceso limitado</div>
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(20px,5vw,30px);color:#fff;text-align:center;line-height:1.2;margin-bottom:20px">No es para<br>cualquiera</div>
+      <div class="red-line"></div>
+      <div style="font-size:12px;color:#888;text-align:center;letter-spacing:1px;line-height:1.8;max-width:80%">El programa es de acceso restringido. Trabajamos con jugadores que tienen mentalidad de elite y compromiso real con mejorar.</div>
+      <div style="margin-top:20px;padding:14px 20px;border:1px solid rgba(255,17,17,0.3);border-radius:4px;background:rgba(255,17,17,0.05)">
+        <div style="font-size:10px;color:#666;letter-spacing:3px;text-align:center;margin-bottom:6px;text-transform:uppercase">Solo para jugadores que</div>
+        <div class="list-item good" style="justify-content:center"><span class="check">&#10003;</span>Quieren resultados reales</div>
+        <div class="list-item good" style="justify-content:center"><span class="check">&#10003;</span>Se comprometen a entrenar</div>
+        <div class="list-item good" style="justify-content:center"><span class="check">&#10003;</span>No ponen excusas</div>
+      </div>
+    </div>
+    <div class="swipe-hint">desliza &#8594;</div>
+  </div>
+
+  <!-- SLIDE 8: CTA -->
+  <div class="slide cta-slide" style="padding:60px 28px 40px">
+    <div class="slide-header">
+      <span class="brand">ELITE FC</span>
+      <div class="dot-row">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+      </div>
+    </div>
+    <div class="slide-num">8 / 8</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div style="font-family:'Orbitron',sans-serif;font-size:10px;color:#555;letter-spacing:4px;text-transform:uppercase;margin-bottom:14px">Quieres entrar al programa</div>
+      <div class="cta-main">COMENTA<br>ABAJO</div>
+      <div class="cta-comment">
+        <div class="cta-comment-word">FISICO</div>
+        <div class="cta-comment-sub">y te enviamos el acceso</div>
+      </div>
+      <div class="red-line"></div>
+      <div class="cta-sub">Plazas limitadas por temporada.<br>No te quedes fuera.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <div class="tag red" style="font-size:8px;margin-bottom:0">#futbol</div>
+        <div class="tag red" style="font-size:8px;margin-bottom:0">#rendimiento</div>
+        <div class="tag red" style="font-size:8px;margin-bottom:0">#futbolista</div>
+        <div class="tag red" style="font-size:8px;margin-bottom:0">#gym</div>
+        <div class="tag red" style="font-size:8px;margin-bottom:0">#elitefc</div>
+      </div>
+    </div>
+  </div>
+
+</div>
